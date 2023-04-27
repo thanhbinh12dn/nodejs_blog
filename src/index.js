@@ -7,6 +7,13 @@ const port = 3000;
 
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+); //middleware xu ly du lieu tu form submit len
+app.use(express.json()); // Gui du lieu tu code js
+
 //HTTP logger
 app.use(morgan("combined"));
 
@@ -26,6 +33,15 @@ app.get("/", (req, res) => {
 
 app.get("/news", (req, res) => {
   res.render("news");
+});
+
+app.get("/search", (req, res) => {
+  res.render("search");
+});
+
+app.post("/search", (req, res) => {
+  console.log(req.body);
+  res.send("");
 });
 
 app.listen(port, () => {
