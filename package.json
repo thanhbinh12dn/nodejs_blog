@@ -31,7 +31,11 @@
   "homepage": "https://github.com/thanhbinh12dn/nodejs_blog#readme",
   "dependencies": {
     "express": "^4.18.2",
-    "express-handlebars": "^7.0.7"
+    "express-handlebars": "^7.0.7",
+    "method-override": "^3.0.0",
+    "mongoose": "^7.0.5",
+    "mongoose-delete": "^0.5.4",
+    "mongoose-slug-updater": "^3.3.0"
   },
   "devDependencies": {
     "morgan": "^1.10.0",
