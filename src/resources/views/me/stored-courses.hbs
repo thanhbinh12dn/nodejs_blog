@@ -1,4 +1,4 @@
-<div class="mt-4">
+<form class="mt-4" method="POST" action="/course/handle-form-actions">
     <div class="d-flex align-items-center justify-content-between">
       <h3>Khóa học của tôi</h3>
       <div>
@@ -6,6 +6,23 @@
         <a href="/course/create" class="p-2 me-2 fs-5"><i class="fa-solid fa-plus"></i></a>
       </div>
     </div>
+
+    <div class="mt-2 d-flex align-items-center">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+        <label class="form-check-label" for="checkbox-all">
+          Chọn tất cả
+        </label>
+      </div>
+
+      <select class="form-select w-25 mx-2" aria-label="Default select example" name="action" required>
+        <option value="">-- Chọn hành động --</option>
+        <option value="delete">Xóa</option>
+      </select>
+
+      <button class="btn btn-primary btn-sm check-all-submit-btn disabled">Thực hiện</button>
+    </div>
+
     <table class="table">
         <thead>
             <tr>
@@ -18,6 +35,11 @@
         <tbody>
             {{#each courses}}
             <tr>
+                <td>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="courseIds[]" value="{{this._id}}">
+                  </div>
+                </td>
                 <th scope="row">{{sum @index 1}}</th>
                 <td>{{this.name}}</td>
                 <td>{{this.level}}</td>
@@ -40,7 +62,7 @@
 
         </tbody>
     </table>
-</div>
+</form>
 
 {{!-- Modal confirm delete --}}
 <div id="delete-course-modal" class="modal" tabindex="-1">
@@ -68,6 +90,9 @@
 <script>
   const exampleModal = document.getElementById('delete-course-modal')
   const btnDeleteCourse = document.getElementById('btn-delete-course')
+  const checkboxAll = $('#checkbox-all')
+  const courseItemCheckbox = $('input[name="courseIds[]"]')
+  const checkAllSubmitBtn = $('.check-all-submit-btn')
 
   let courseId;
   let deleteForm = document.forms['delete-course-form'];
@@ -84,6 +109,30 @@
   btnDeleteCourse.onclick = function () {
     deleteForm.action = '/course/' + courseId + '?_method=DELETE'
     deleteForm.submit()
+  }
+
+  //When checkbox all changed
+  checkboxAll.change(function () {
+    const isCheckedAll = $(this).prop('checked');
+    courseItemCheckbox.prop('checked', isCheckedAll);
+    renderCheckAllSubmitBtn()
+  })
+
+  //Course item checkbox changed
+  courseItemCheckbox.change(function () {
+    const isCheckedAll = courseItemCheckbox.length === $('input[name="courseIds[]"]:checked').length
+    checkboxAll.prop('checked', isCheckedAll);
+    renderCheckAllSubmitBtn()
+  })
+
+  //Re-render check all submit button
+  function renderCheckAllSubmitBtn() {
+    const checkedCount = $('input[name="courseIds[]"]:checked').length;
+    if (checkedCount >  0) {
+      checkAllSubmitBtn.removeClass('disabled')
+    } else {
+      checkAllSubmitBtn.addClass('disabled')
+    }
   }
 }
 </script>
